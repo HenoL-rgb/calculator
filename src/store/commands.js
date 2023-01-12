@@ -16,6 +16,11 @@ export function addDegree(state, newDigit) {
     return addDigit(state, newDigit);
 }
 
+export function addSqrt(state, newDigit) {
+    if(state.currentValue === '') return {...state};
+    return addDigit(state, `1/${newDigit}`);
+}
+
 
 export function clearAllAndAddDigit(state, newDigit) {
     const newState = {...initialState};
@@ -67,4 +72,12 @@ export function undoOperation(state) {
     const newValues = [...prevState.values];
     newValues.pop();
     return {...prevState, values: [...newValues], history: newHistory};
+}
+
+
+export function changeSign(state) {
+    const newCurrentValue = state.currentValue * (-1);
+    const newValues = [...state.values];
+    newValues.pop();
+
 }

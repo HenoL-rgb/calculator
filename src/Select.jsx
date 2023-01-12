@@ -7,14 +7,15 @@ export default function Select({values, operation, handleClick}) {
         const newValue = '^' + (degree === 'y' ? '' : degree);
         handleClick(operation, newValue)
     }
-  return (
-    <div>
-        <select value={values.at(-1)} onChange={(e) => handleChange(e.target.value)}>
-            <option selected hidden>{values.at(-1)}</option>
-            {values.map(item =>
-               <option key={item} value={`${item}`}>{item}</option>
-            )}
-        </select>
-    </div>
-  )
+
+    return (
+        <div>
+            <select value={values.at(-1)} onChange={(e) => handleChange(e.target.value)}>
+                <option selected hidden>{values.at(-1)}</option>
+                {values.map(item =>
+                <option key={item} value={`${item}`}>{item}</option>
+                )}
+            </select>
+        </div>
+    )
 }

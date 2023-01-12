@@ -47,7 +47,8 @@ export default function Buttons({handleClick}) {
         </div>
         <div className={classes.sideColumn}>
           <Select values={['x^2', 'x^3', 'x^y']} operation={operations.xPowY} handleClick={handleClick}/>
-          <Button value={'ky'} operation={operations.xSqrtY} handleClick={handleClick}/>
+          <Select values={['√x', '∛x', `y√x`]} operation={operations.xSqrtY} handleClick={handleClick}/>
+
           <Button value={'x!'} operation={operations.factorial} handleClick={handleClick}/>
           <Button value={'1/x'} operation={operations.oneDivideX} handleClick={handleClick}/>
         </div>

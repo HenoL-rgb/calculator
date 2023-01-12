@@ -9,8 +9,6 @@ import { operations } from './Buttons';
 
 function App() {
 
-  const [operation, setOperation] = useState('ADD_VALUE');
-  const [history, setHistory] = useState([]);
   const dispatch = useDispatch();
 
   const value = useSelector(state => {
