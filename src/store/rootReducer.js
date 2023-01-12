@@ -7,6 +7,8 @@ export const initialState = {
     value: '0',
     currentValue: '',
     operation: null,
+    lastOperation: null,
+    secondValue_tmp: null,
     values: [],
     history: [],
 }
@@ -15,20 +17,25 @@ const rootReducer = (state = initialState, action) => {
 
     switch(action.type) {
         case "ADD_DOT":
-            if(state.value.includes('.')) return state;
+            if(state.value.includes('.')) 
+                return {...state};
 
         case "ADD_DIGIT":
             if(state.values != '' && state.operation === null) {
                 return clearAllAndAddDigit(state, action.payload);
             }
             return addDigit(state, action.payload);
-//Доделать повторный клик по операции
+
         case "ADD_OPERATION": 
+            if((state.value === '0') && (action.payload === '-')){
+                return addDigit(state, action.payload)
+            }
+
             if(state.operation !== null){
                 if(state.currentValue) {
                     return addOperationAndCalc(
                         {...state,
-                            values: [...state.values, state.currentValue]
+                            values: [...state.values, state.currentValue],
                         }, action.payload
                         );
                 } 
@@ -36,7 +43,6 @@ const rootReducer = (state = initialState, action) => {
                     value: state.value.slice(0, state.value.length - 1)}, 
                     action.payload);
             }
-
             return addOperation(state, action.payload);
 
         case "X_POW_Y":
@@ -47,8 +53,9 @@ const rootReducer = (state = initialState, action) => {
 
         case "CHANGE_SIGN":
             return changeSign(state);
+
         case "UNDO":
-            if(state.history == '') return;
+            if(state.history == '') return {...state};
             return undoOperation(state);
 
         case "CLEAR_ALL":
@@ -56,13 +63,22 @@ const rootReducer = (state = initialState, action) => {
 
         case "CALC_VALUE":
             const newCurrentValue = calcDegree(state.currentValue);
+
+            const newSecondValueTmp = newCurrentValue ? newCurrentValue
+            : state.secondValue_tmp;
+
+            const newLastOperation = state.operation ? state.operation
+            : state.lastOperation;
+
             return calculate(
                 {...state,
-                values: [...state.values, newCurrentValue]
+                values: [...state.values, newCurrentValue],        
+                secondValue_tmp: newSecondValueTmp,
+                lastOperation: newLastOperation,
             });
 
         default:
-            return state;
+            return {...state};
     }
 }
 

@@ -1,11 +1,7 @@
-import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import './App.css';
 import Buttons from './Buttons'
-import { Calculator } from './Calculator';
-import { AddCommand } from './Operations';
 import Output from './Output';
-import { operations } from './Buttons';
 
 function App() {
 
@@ -16,11 +12,9 @@ function App() {
   })
 
   function handleClick(operation, value) {
-    // if(value.operation != null) {
-    //   dispatch({type: operations.calculate, payload: value});
-    // }
-    console.log(value)
+
     dispatch({type: operation, payload: value});
+
   }
 
   return (

@@ -1,11 +1,13 @@
 import { initialState } from "./rootReducer";
 
+const MAX_HISTORY = 5;
 
 export function calculate(state) {
     let firstValue = parseFloat(state.values[0]);
     const secondValue = state.values[1] ? parseFloat(state.values[1])
-    : firstValue;
-    const operation = state.operation;
+    : parseFloat(state.secondValue_tmp);
+
+    const operation = state.operation !== null ? state.operation : state.lastOperation;
     
     switch(operation) {
         case "+":
@@ -29,7 +31,17 @@ export function calculate(state) {
         firstValue = afterDot[0] + '.' + afterDot[1].slice(0, 3); 
     }
 
-    console.log(state)
-    return {...initialState, value: `${firstValue}`, values: [firstValue],
-    history: [...state.history, state]};
+    const newHistory = [...state.history, state];
+
+    if(newHistory.length > MAX_HISTORY) {
+        newHistory.shift();
+    }
+
+    return {...state, 
+        value: `${firstValue}`, 
+        values: [firstValue],
+        history: [...newHistory],
+        operation: null,
+        currentValue: '',
+    };
 }

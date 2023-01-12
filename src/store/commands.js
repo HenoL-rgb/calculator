@@ -29,13 +29,12 @@ export function clearAllAndAddDigit(state, newDigit) {
 
 
 export function addOperation(state, payload) {
-    const newValue = (state.value === '0') && (payload === '-') ? payload
-    : state.value + payload;
+    const newValue = state.value + payload;
 
     const newCurrentValue = calcDegree(state.currentValue);
 
     return {...state, 
-        value: newValue, 
+        value: newValue,
         currentValue: '', 
         operation: payload, 
         values: state.currentValue ? [...state.values, newCurrentValue]
