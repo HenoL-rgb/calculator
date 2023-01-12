@@ -1,0 +1,55 @@
+.container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 5px;
+    max-width: min-content;
+    button, select {
+        text-align: center;
+        width: 100%;
+        min-height: 50px;
+        outline: none;
+        border: 0;
+        font-size: 20px;
+        color: #E7E7E7;
+    }
+    & .topButtons {
+        grid-column: span 3;
+        display: grid;
+        grid-template-columns: repeat(5, 80px);
+        grid-template-rows: 1fr 1fr;
+        gap: 5px;
+        button {
+            background-color: #5A5B5C;
+            &:active {
+                background-color: #8d8d8d;
+            }
+        }
+    }
+    & .sideColumn {
+        width: 80px;
+        display: flex;
+        flex-direction: column;
+        row-gap: 5px;
+        button, select {
+            background-color: #F2A03D;
+            &:active {
+                background-color: #cc8022;
+            }
+        }
+    }
+    & .numbers {
+        display: grid;
+        grid-template-columns: repeat(3, 80px);
+        grid-template-rows: 1fr 1fr;
+        gap: 5px;
+        & .zero {
+            grid-column: span 2;
+        }
+        button {
+            background-color: #757677;
+            &:active {
+                background-color: #777777!important;
+            }
+        }
+    }
+}
