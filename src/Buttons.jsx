@@ -22,6 +22,7 @@ export const operations = {
   undo: "UNDO",
   xPowY: "X_POW_Y",
   xSqrtY: "X_SQRT_Y",
+  tenPowX: "TEN_POW_X",
   factorial: "FACTORIAL_VALUE",
   memClear: "MEMORY_CLEAR",
   memPlus: "MEMORY_PLUS",
@@ -39,7 +40,7 @@ export default function Buttons({handleClick}) {
           <Button value={'M+'} operation={operations.memPlus} handleClick={handleClick}/>
           <Button value={'M-'} operation={operations.memMinus} handleClick={handleClick}/>
           <Button value={'MR'} operation={operations.memRestore} handleClick={handleClick}/>
-          <Button value={'+/-'} operation={operations.changeSign} handleClick={handleClick}/>
+          <Button value={'10^x'} operation={operations.tenPowX} handleClick={handleClick}/>
           <Button value={'AC'} operation={operations.clearAll} handleClick={handleClick}/>
           <Button value={'%'} operation={operations.percent} handleClick={handleClick}/>
           <Button value={'<-'} operation={operations.backspace} handleClick={handleClick}/>
@@ -56,6 +57,7 @@ export default function Buttons({handleClick}) {
           {numbers.map(item => 
           <Button key={item} value={`${item}`} operation={operations.addDigit} 
           handleClick={handleClick}/>)}
+          <Button value={'+/-'} operation={operations.changeSign} handleClick={handleClick}/>
           <Button value={'.'} operation={operations.addDot} handleClick={handleClick}/>
         </div>
 

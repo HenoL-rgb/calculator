@@ -1,26 +1,26 @@
+import { addCommand, divideCommand, multiplyCommand, subCommand } from "./commands";
 import { initialState } from "./rootReducer";
 
 const MAX_HISTORY = 5;
 
 export function calculate(state) {
     let firstValue = parseFloat(state.values[0]);
-    const secondValue = state.values[1] ? parseFloat(state.values[1])
+    const secondValue = state.values[1] !== '0' ? parseFloat(state.values[1])
     : parseFloat(state.secondValue_tmp);
-
     const operation = state.operation !== null ? state.operation : state.lastOperation;
     
     switch(operation) {
         case "+":
-            firstValue += secondValue;
+            firstValue = addCommand(firstValue, secondValue)
             break;
         case "-":
-            firstValue -= secondValue;
+            firstValue = subCommand(firstValue, secondValue);
             break;
         case "*":
-            firstValue *= secondValue;
+            firstValue = multiplyCommand(firstValue, secondValue);
             break;
         case "/":
-            firstValue /= secondValue;
+            firstValue = divideCommand(firstValue, secondValue);
             break;
         default: 
             break;
@@ -31,7 +31,7 @@ export function calculate(state) {
         firstValue = afterDot[0] + '.' + afterDot[1].slice(0, 3); 
     }
 
-    const newHistory = [...state.history, state];
+    const newHistory = [...state.history, state]
 
     if(newHistory.length > MAX_HISTORY) {
         newHistory.shift();
@@ -42,6 +42,6 @@ export function calculate(state) {
         values: [firstValue],
         history: [...newHistory],
         operation: null,
-        currentValue: '',
+        currentValue: '0',
     };
 }
