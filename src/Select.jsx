@@ -3,23 +3,12 @@ import React, { useState } from 'react'
 export default function Select({values, operation, handleClick}) {
 
     function handleChange(value){
-        let newValue = '';
-        if(operation === 'X_POW_Y') {
-            newValue = sendDegree(value);
-        }
-        if(operation === 'X_SQRT_Y') {
-            newValue = sendSqrt(value);
-        }
+        const newValue = sendDegree(value);
+   
         handleClick(operation, newValue)
     }
 
     function sendDegree(value) {
-        const degree = value.split('^')[1]
-        const newValue = '^' + (degree === 'y' ? '' : degree);
-        return newValue;
-    }
-
-    function sendSqrt(value) {
         switch(value) {
             case '√x':
                 return '^(1/2)';
@@ -28,8 +17,15 @@ export default function Select({values, operation, handleClick}) {
             case 'y√x':
                 return '^(1/';
             default:
-                return '^1';
+                const degree = value.split('^')[1]
+                const newValue = '^' + (degree === 'y' ? '' : degree);
+                return newValue;
         }
+        
+    }
+
+    function sendSqrt(value) {
+        
     }
 
     return (

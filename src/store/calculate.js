@@ -4,8 +4,9 @@ import { initialState } from "./rootReducer";
 const MAX_HISTORY = 5;
 
 export function calculate(state) {
+    console.log(state)
     let firstValue = parseFloat(state.values[0]);
-    const secondValue = state.values[1] !== '0' ? parseFloat(state.values[1])
+    const secondValue = state.values[1] !== '' ? clearInput(state.values[1])
     : parseFloat(state.secondValue_tmp);
     const operation = state.operation !== null ? state.operation : state.lastOperation;
     
@@ -21,6 +22,9 @@ export function calculate(state) {
             break;
         case "/":
             firstValue = divideCommand(firstValue, secondValue);
+            break;
+        case "^":
+            firstValue = firstValue ** secondValue;
             break;
         default: 
             break;
@@ -42,6 +46,19 @@ export function calculate(state) {
         values: [firstValue],
         history: [...newHistory],
         operation: null,
-        currentValue: '0',
+        currentValue: '',
     };
+}
+
+export function clearInput(value) {
+    let newValue = removeOuterBraces(value)
+    if(newValue.includes('/')) {
+        const splitValue = newValue.split('/');
+        newValue = divideCommand(parseFloat(splitValue[0]), parseFloat(splitValue[1]))
+    }
+    return parseFloat(newValue);
+}
+
+export function removeOuterBraces(value) {
+    return value.split('').filter(item => (item != '(' && item != ')')).join('');
 }

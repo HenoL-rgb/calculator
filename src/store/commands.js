@@ -34,15 +34,28 @@ export function addDigit(state, newDigit) {
     const newCurrentValue = state.currentValue + newDigit;
 
     const newValue = !state.values[0] ? newCurrentValue
-    : state.values[0] + state.operation + newCurrentValue
+    : !state.value.includes('(') ? state.values[0] + state.operation +  newCurrentValue
+    : state.values[0] + state.operation +  newCurrentValue + ')'
+  
 
     return {...state, value: newValue, currentValue: newCurrentValue}
 }
 
 
-export function addDegree(state, newDigit) {
+export function addDegree(state, payload) {
     if(state.currentValue === '') return {...state};
-    return addDigit(state, newDigit);
+    const degree = payload.split('^')[1];
+
+    let newValue = state.value + payload;
+
+    return {...state, 
+        value: newValue,
+        currentValue: payload.split('^')[1], 
+        operation: '^',
+        secondValue_tmp: null, 
+        values: state.currentValue ? [...state.values, state.currentValue]
+        : [...state.values]
+    };
 }
 
 export function addSqrt(state, newDigit) {
@@ -59,34 +72,26 @@ export function clearAllAndAddDigit(state, newDigit) {
 
 export function addOperation(state, payload) {
     let newValue = state.value + payload;
-
-    if(newValue.includes('(') && !newValue.includes(')')){
-        newValue = state.value + ')' + payload;
-    }
-
-    const newCurrentValue = calcDegree(state.currentValue);
+    const newOperation = !payload.includes('^') ? payload
+    : '^';
+    const newCurrentValue = !payload.includes('^') ? ''
+    : payload.split('^')[1]
 
     return {...state, 
         value: newValue,
-        currentValue: '', 
-        operation: payload,
+        currentValue: newCurrentValue, 
+        operation: newOperation,
         secondValue_tmp: null, 
-        values: state.currentValue ? [...state.values, newCurrentValue]
+        values: state.currentValue ? [...state.values, state.currentValue]
         : [...state.values]
     };
 }
 
 
 export function addOperationAndCalc(state, payload) {
-    console.log(state)
-    const newCurrentValue = calcDegree(state.currentValue);
-    const newValues = [...state.values];
-
-    newValues[newValues.length - 1] = newCurrentValue;
-
-    const newState = calculate({...state, values: [...newValues]});
-
-    return {...newState, value: newState.value + payload, operation: payload}
+    const newState = calculate({...state, values: [...state.values, state.currentValue]});
+    
+    return addOperation(newState, payload)
 }
 
 
@@ -131,13 +136,13 @@ export function divideOneByX(state) {
     parseFloat(state.currentValue != '' ? state.currentValue
     : state.values[0]);
 
-    const value = divideCommand(1, valueToDivideBy);
     const newCurrentValue = state.currentValue.includes('^') ? 
-    state.currentValue + value
-    : value;
+    state.currentValue + `(1/${valueToDivideBy})`
+    : `(1/${valueToDivideBy})`;
     const valueToShow = `1/${valueToDivideBy}`;
-    let newValue = state.currentValue.includes('^') ? ''
-    : ''
+    let newValue = !state.values[0] ?
+    `(${valueToShow})`  
+    : state.values[0] + state.operation + `(${valueToShow})`
 
     return {
         ...state,

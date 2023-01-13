@@ -25,10 +25,6 @@ const rootReducer = (state = initialState, action) => {
             return addDigit(state, action.payload);
 
         case "ADD_OPERATION": 
-            if((state.value === '0') && (action.payload === '-')){
-                return addDigit(state, action.payload)
-            }
-
             if(state.operation !== null){
                 if(state.currentValue != '') {
                     return addOperationAndCalc(state, action.payload)
@@ -38,13 +34,13 @@ const rootReducer = (state = initialState, action) => {
                     action.payload);
             }
             return addOperation(state, action.payload);
-
-        case "X_POW_Y":
-            return addDegree(state, action.payload);
         
-        case "X_SQRT_Y":
-            return addSqrt(state, action.payload);
+        case "X_POW_Y":
+            return addDegree(state, action.payload)
 
+        case "X_SQRT_Y":
+            return addSqrt(state, action.payload)
+        
         case "CHANGE_SIGN":
             return changeSign(state);
 
@@ -62,9 +58,9 @@ const rootReducer = (state = initialState, action) => {
             return factorial(state);
 
         case "CALC_VALUE":
-            const newCurrentValue = calcDegree(state.currentValue);
 
-            const newSecondValueTmp = newCurrentValue !== '' ? newCurrentValue
+            const newSecondValueTmp = state.currentValue !== '' ? 
+            state.currentValue
             : state.secondValue_tmp;
 
             const newLastOperation = state.operation ? state.operation
@@ -72,7 +68,7 @@ const rootReducer = (state = initialState, action) => {
 
             return calculate(
                 {...state,
-                values: [...state.values, newCurrentValue],        
+                values: [...state.values, state.currentValue],        
                 secondValue_tmp: newSecondValueTmp,
                 lastOperation: newLastOperation,
             });
