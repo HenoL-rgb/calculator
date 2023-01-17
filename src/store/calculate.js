@@ -1,13 +1,12 @@
-import { addCommand, divideCommand, multiplyCommand, subCommand } from "./commands";
+import { addCommand, divideCommand, factorialCommand, multiplyCommand, subCommand } from "./commands";
 import { initialState } from "./rootReducer";
 
 const MAX_HISTORY = 5;
 
 export function calculate(state) {
-    console.log(state)
     let firstValue = parseFloat(state.values[0]);
-    const secondValue = state.values[1] !== '' ? clearInput(state.values[1])
-    : parseFloat(state.secondValue_tmp);
+    const secondValue = state.values[1] ? clearInput(state.values[1])
+    : parseFloat(state.secondValue_tmp) ? parseFloat(state.secondValue_tmp) : 0;
     const operation = state.operation !== null ? state.operation : state.lastOperation;
     
     switch(operation) {
@@ -26,6 +25,12 @@ export function calculate(state) {
         case "^":
             firstValue = firstValue ** secondValue;
             break;
+        case "x!":
+            firstValue = factorialCommand(parseInt(firstValue));
+            break;
+        case "10^x":
+            firstValue = 10 ** firstValue;
+            break;
         default: 
             break;
     }
@@ -43,7 +48,7 @@ export function calculate(state) {
 
     return {...state, 
         value: `${firstValue}`, 
-        values: [firstValue],
+        values: [`${firstValue}`],
         history: [...newHistory],
         operation: null,
         currentValue: '',

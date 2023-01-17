@@ -30,7 +30,7 @@ export function factorialCommand(value) {
 }
 
 export function addDigit(state, newDigit) {
-
+    if(state.currentValue === '0' && newDigit === '0') return {...state}; 
     const newCurrentValue = state.currentValue + newDigit;
 
     const newValue = !state.values[0] ? newCurrentValue
@@ -53,16 +53,10 @@ export function addDegree(state, payload) {
         currentValue: payload.split('^')[1], 
         operation: '^',
         secondValue_tmp: null, 
-        values: state.currentValue ? [...state.values, state.currentValue]
-        : [...state.values]
+        values: !state.values[0] ? [...state.values, '0', state.currentValue]
+        : [...state.values, state.currentValue]
     };
 }
-
-export function addSqrt(state, newDigit) {
-    if(state.currentValue === '') return {...state};
-    return addDigit(state, newDigit);
-}
-
 
 export function clearAllAndAddDigit(state, newDigit) {
     const newState = {...initialState};
@@ -76,13 +70,15 @@ export function addOperation(state, payload) {
     : '^';
     const newCurrentValue = !payload.includes('^') ? ''
     : payload.split('^')[1]
-
+    
     return {...state, 
         value: newValue,
         currentValue: newCurrentValue, 
         operation: newOperation,
         secondValue_tmp: null, 
-        values: state.currentValue ? [...state.values, state.currentValue]
+        values: state.currentValue ?     
+        [...state.values,  state.currentValue]
+        : !state.values[0] ? [...state.values, '0']
         : [...state.values]
     };
 }
@@ -95,24 +91,8 @@ export function addOperationAndCalc(state, payload) {
 }
 
 
-export function calcDegree(value) {
-    if(!value.includes('^')) return value;
-
-    let number = parseFloat(value.split('^')[0]);
-    const degree = value.split('^')[1].split('/');
-    if(value.includes('(') && !value.includes(')')){
-        degree[1] = (degree[1] ? degree[1] : '1') + ')';
-    }
-
-    const degreeDecimal = !value.includes('(') ? parseFloat(degree[0])
-    : parseInt(degree[0].slice(1)) / parseFloat(degree[1].slice(0, degree[1].length - 1));
-
-    number = number ** degreeDecimal;
-    return `${number}`;
-}
-
-
 export function undoOperation(state) {
+    if(!state.history.length) return {...state}
     const newHistory = [...state.history];
     const prevState = newHistory.pop();
     const newValues = [...prevState.values];
@@ -130,48 +110,23 @@ export function changeSign(state) {
 
 
 export function divideOneByX(state) {
-    if(state.value === '0') return {...state}
+    const newState = calculate({...state, values: [...state.values, state.currentValue]});
 
-    let valueToDivideBy = 
-    parseFloat(state.currentValue != '' ? state.currentValue
-    : state.values[0]);
+    return calculate({...newState, values: ['1', ...newState.values], operation: '/'})
 
-    const newCurrentValue = state.currentValue.includes('^') ? 
-    state.currentValue + `(1/${valueToDivideBy})`
-    : `(1/${valueToDivideBy})`;
-    const valueToShow = `1/${valueToDivideBy}`;
-    let newValue = !state.values[0] ?
-    `(${valueToShow})`  
-    : state.values[0] + state.operation + `(${valueToShow})`
-
-    return {
-        ...state,
-        currentValue: `${newCurrentValue}`,
-        value: newValue,
-    }
 }
 
 
-export function factorial(state) {
+export function factorial(state, payload) {
 
-    let valueToFactorial = 
-    parseFloat(state.currentValue != '' ? state.currentValue
-    : state.values[0]);
+    const newState = calculate({...state, values: [...state.values, state.currentValue]});
 
-    const factorial = factorialCommand(valueToFactorial)
-    const newCurrentValue = state.currentValue.includes('^') ? 
-    state.currentValue + factorial
-    : factorial;
-    const valueToShow = `${newCurrentValue}`;
-    const newValue = state.value != '0' ? !state.value.includes('^')
-    ? state.operation === null ? valueToShow
-    : valueToShow
-    : valueToShow
-    : state.value
+    return calculate({...newState, operation: payload})
+}
 
-    return {
-        ...state,
-        currentValue: `${newCurrentValue}`,
-        value: newValue,
-    }
+
+export function tenPowX(state, payload) {
+
+    const newState = calculate({...state, values: [...state.values, state.currentValue]});
+    return calculate({...newState, operation: payload})
 }

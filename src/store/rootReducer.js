@@ -1,4 +1,4 @@
-import {addDigit, clearAllAndAddDigit, addOperationAndCalc, addOperation, addDegree, calcDegree, undoOperation, changeSign, addSqrt, divideOneByX, factorial} from './commands'
+import {addDigit, clearAllAndAddDigit, addOperationAndCalc, addOperation, addDegree, undoOperation, changeSign, divideOneByX, factorial, tenPowX} from './commands'
 import {calculate} from './calculate'
 
 export const initialState = {
@@ -38,9 +38,6 @@ const rootReducer = (state = initialState, action) => {
         case "X_POW_Y":
             return addDegree(state, action.payload)
 
-        case "X_SQRT_Y":
-            return addSqrt(state, action.payload)
-        
         case "CHANGE_SIGN":
             return changeSign(state);
 
@@ -55,7 +52,10 @@ const rootReducer = (state = initialState, action) => {
             return divideOneByX(state);
 
         case "FACTORIAL_VALUE":
-            return factorial(state);
+            return factorial(state, action.payload);
+        
+        case "TEN_POW_X":
+            return tenPowX(state, action.payload);
 
         case "CALC_VALUE":
 
