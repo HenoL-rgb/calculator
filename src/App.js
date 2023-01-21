@@ -26,7 +26,7 @@ function App() {
       setHistory(history.filter((item,index) => index != 0))
     }
   }, [history])
-  
+
 
   function handleClick(operation, value) {
     if(operation === 'UNDO'){
@@ -53,13 +53,16 @@ function App() {
 
   return (
     <div className="App">
-      {
-        isMemorySet ?
-        <span className='memoryIndicator'>M</span>
-        : ''
-      }
-      <Output value={value}/>
-      <Buttons handleClick={handleClick}/>
+      <div className="calcContainer">
+        {
+          isMemorySet ?
+          <span className='memoryIndicator'>M</span>
+          : ''
+        }
+        <Output value={value}/>
+        <Buttons handleClick={handleClick}/>
+      </div>
+ 
     </div>
   );
 }
