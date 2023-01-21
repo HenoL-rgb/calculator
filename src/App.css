@@ -1,10 +1,20 @@
 .App {
     display: flex;
     flex-direction: column;
+    position: relative;
     padding: 20px;
     row-gap: 20px;
     width: min-content;
     background-color: #48494A;
     border-radius: 20px;
-    font-family: 'IBM Plex sans';
+    font-family: 'IBM Plex sans', sans-serif;
+}
+
+.memoryIndicator {
+    position: absolute;
+    font-family: 'IBM Plex sans', sans-serif;
+    color: #E7E7E7;
+    top: 20px;
+    left: 20px;
+    font-size: 16px;
 }

@@ -1,4 +1,4 @@
-import {addDigit, clearAllAndAddDigit, addOperationAndCalc, addOperation, addDegree, undoOperation, changeSign, divideOneByX, factorial, tenPowX} from './commands'
+import {addDigit, clearAllAndAddDigit, addOperationAndCalc, addOperation, addDegree, undoOperation, changeSign, divideOneByX, factorial, tenPowX, percent, addToMemory, subFromMemory, restoreMemory, clearMemory, clearCurrent} from './commands'
 import {calculate} from './calculate'
 
 export const initialState = {
@@ -7,74 +7,93 @@ export const initialState = {
     operation: null,
     lastOperation: null,
     secondValue_tmp: null,
+    isError: false,
     values: [],
+    memory: '',
     history: [],
 }
 
 const rootReducer = (state = initialState, action) => {
+    const currentState = !state.isError ? {...state} : {...initialState}
 
     switch(action.type) {
         case "ADD_DOT":
             if(state.currentValue.includes('.')) 
-                return {...state};
+                return {...currentState};
 
         case "ADD_DIGIT":
             if(state.values != '' && state.operation === null) {
-                return clearAllAndAddDigit(state, action.payload);
+                return clearAllAndAddDigit(currentState, action.payload);
             }
-            return addDigit(state, action.payload);
+            return addDigit(currentState, action.payload);
 
         case "ADD_OPERATION": 
-            if(state.operation !== null){
-                if(state.currentValue != '') {
-                    return addOperationAndCalc(state, action.payload)
+            if(currentState.operation !== null){
+                if(currentState.currentValue != '') {
+                    return addOperationAndCalc(currentState, action.payload)
                 }
-                return addOperation({...state, 
-                    value: state.value.slice(0, state.value.length - 1)}, 
+                return addOperation({...currentState, 
+                    value: currentState.value.slice(0, currentState.value.length - 1)}, 
                     action.payload);
             }
-            return addOperation(state, action.payload);
+            return addOperation(currentState, action.payload);
         
-        case "X_POW_Y":
-            return addDegree(state, action.payload)
+        case "PERCENT_VALUE":
+            return percent(currentState, action.payload)
 
         case "CHANGE_SIGN":
-            return changeSign(state);
+            return changeSign(currentState);
 
+        case "MEMORY_PLUS":
+            return addToMemory(currentState);
+        
+        case "MEMORY_MINUS":
+            return subFromMemory(currentState);
+        
+        case "MEMORY_RESTORE":
+            return restoreMemory(currentState);
+
+        case "MEMORY_CLEAR":
+            return clearMemory(currentState);
+            
         case "UNDO":
-            if(state.history === '') return {...state};
-            return undoOperation(state);
+            if(currentState.history === '') return {...currentState};
+            return undoOperation(currentState);
 
         case "CLEAR_ALL":
-            return {...initialState, history: [...state.history]};
+            return {...initialState, history: [...currentState.history]};
 
+        case "CLEAR_CURRENT":
+            return clearCurrent(currentState);
+    
         case "DIVIDE_ONE_BY_VALUE":
-            return divideOneByX(state);
+            return divideOneByX(currentState);
 
         case "FACTORIAL_VALUE":
-            return factorial(state, action.payload);
+            return factorial(currentState, action.payload);
         
         case "TEN_POW_X":
-            return tenPowX(state, action.payload);
+            return tenPowX(currentState, action.payload);
 
         case "CALC_VALUE":
 
-            const newSecondValueTmp = state.currentValue !== '' ? 
-            state.currentValue
-            : state.secondValue_tmp;
+            const newSecondValueTmp = currentState.currentValue !== '' ? 
+            currentState.currentValue
+            : currentState.secondValue_tmp;
 
-            const newLastOperation = state.operation ? state.operation
-            : state.lastOperation;
+            const newLastOperation = 
+            currentState.operation ? currentState.operation
+            : currentState.lastOperation;
 
             return calculate(
-                {...state,
-                values: [...state.values, state.currentValue],        
+                {...currentState,
+                values: [...currentState.values, currentState.currentValue],        
                 secondValue_tmp: newSecondValueTmp,
                 lastOperation: newLastOperation,
             });
 
         default:
-            return {...state};
+            return {...currentState};
     }
 }
 

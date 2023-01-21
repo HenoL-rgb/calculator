@@ -18,7 +18,7 @@ export const operations = {
   changeSign: "CHANGE_SIGN",
   percent: "PERCENT_VALUE",
   clearAll: "CLEAR_ALL",
-  backspace: "CLEAR_LAST",
+  clear: "CLEAR_CURRENT",
   undo: "UNDO",
   xPowY: "X_POW_Y",
   xSqrtY: "X_SQRT_Y",
@@ -42,8 +42,8 @@ export default function Buttons({handleClick}) {
           <Button value={'MR'} operation={operations.memRestore} handleClick={handleClick}/>
           <Button value={'10^x'} operation={operations.tenPowX} handleClick={handleClick}/>
           <Button value={'AC'} operation={operations.clearAll} handleClick={handleClick}/>
+          <Button value={'C'} operation={operations.clear} handleClick={handleClick}/>
           <Button value={'%'} operation={operations.percent} handleClick={handleClick}/>
-          <Button value={'<-'} operation={operations.backspace} handleClick={handleClick}/>
           <Button value={'/'} operation={operations.addOperation} handleClick={handleClick}/>
         </div>
         <div className={classes.sideColumn}>

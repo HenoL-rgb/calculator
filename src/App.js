@@ -12,6 +12,10 @@ function App() {
     return state.value;
   })
 
+  const isMemorySet = useSelector(state => {
+    return state.memory;
+  })
+
   function handleClick(operation, value) {
 
     dispatch({type: operation, payload: value});
@@ -20,6 +24,11 @@ function App() {
 
   return (
     <div className="App">
+      {
+        isMemorySet ?
+        <span className='memoryIndicator'>M</span>
+        : ''
+      }
       <Output value={value}/>
       <Buttons handleClick={handleClick}/>
     </div>
