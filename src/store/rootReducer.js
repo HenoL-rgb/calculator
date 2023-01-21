@@ -10,7 +10,6 @@ export const initialState = {
     isError: false,
     values: [],
     memory: '',
-    history: [],
 }
 
 const rootReducer = (state = initialState, action) => {
@@ -57,11 +56,10 @@ const rootReducer = (state = initialState, action) => {
             return clearMemory(currentState);
             
         case "UNDO":
-            if(currentState.history === '') return {...currentState};
-            return undoOperation(currentState);
+            return undoOperation(action.payload);
 
         case "CLEAR_ALL":
-            return {...initialState, history: [...currentState.history]};
+            return {...initialState};
 
         case "CLEAR_CURRENT":
             return clearCurrent(currentState);

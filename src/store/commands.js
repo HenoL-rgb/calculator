@@ -72,7 +72,7 @@ export function addOperation(state, payload) {
     const currentValue = state.value.at(-1) === '.' ? state.value.split('.')[0]
     : state.value;
 
-    let newValue = !payload.includes('^') ? currentValue + payload
+    const newValue = !payload.includes('^') ? currentValue + payload
     : `(${currentValue})` + payload;
 
     const newOperation = !payload.includes('^') ? payload
@@ -86,7 +86,7 @@ export function addOperation(state, payload) {
         currentValue: newCurrentValue, 
         operation: newOperation,
         secondValue_tmp: null, 
-        values: currentValue ?     
+        values: state.currentValue ?     
         [...state.values,  currentValue]
         : !state.values[0] ? [...state.values, '0']
         : [...state.values]
@@ -101,18 +101,14 @@ export function addOperationAndCalc(state, payload) {
 }
 
 
-export function undoOperation(state) {
-    if(!state.history.length) return {...state}
-    const newHistory = [...state.history];
-    const prevState = newHistory.pop();
-    const newValues = [...prevState.values];
-    newValues.pop();
-    return {...prevState, values: [...newValues], history: newHistory};
+export function undoOperation(prevState) {
+
+    return {...prevState};
 }
 
 
 export function changeSign(state) {
-    if(state.currentValue == '') return {...state}
+    if(state.currentValue === '' || state.currentValue === '0') return {...state}
     const valueToChange = state.currentValue;
     const isSecondValue = state.values[0] ? true : false;
     const changedValue = parseFloat(valueToChange) < 0 ? `${(valueToChange * (-1))}` 

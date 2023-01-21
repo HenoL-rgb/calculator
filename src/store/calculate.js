@@ -1,8 +1,6 @@
 import { addCommand, divideCommand, factorialCommand, multiplyCommand, percentCommand, subCommand } from "./commands";
 import { initialState } from "./rootReducer";
 
-const MAX_HISTORY = 1;
-
 export function calculate(state) {
     let firstValue = state.values[0] ? parseFloat(state.values[0]) : 0;
     const secondValue = state.values[1] ? clearInput(state.values[1])
@@ -75,20 +73,9 @@ export function saveResult(state, firstValue) {
         firstValue = afterDot[0] + '.' + afterDot[1].slice(0, 3); 
     }
 
-    const newHistory = [...state.history,
-        {...state, operation: state.operation === '%' ? 
-        null : state.operation
-        }
-    ]
-
-    if(newHistory.length > MAX_HISTORY) {
-        newHistory.shift();
-    }
-
     return {...state, 
         value: `${firstValue}`, 
         values: [`${firstValue}`],
-        history: [...newHistory],
         operation: null,
         currentValue: '',
     };
