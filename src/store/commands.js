@@ -33,7 +33,8 @@ export function factorialCommand(value) {
 
 export function addDigit(state, newDigit) {
     if(state.currentValue === '0' && newDigit === '0') return {...state}; 
-    const newCurrentValue = state.currentValue + newDigit;
+    const newCurrentValue = (state.currentValue === '' && newDigit === '.') ? '0' + state.currentValue + newDigit
+    : state.currentValue + newDigit;
 
     const newValue = !state.values[0] ? newCurrentValue
     : !state.value.includes('(') ? state.values[0] + state.operation +  newCurrentValue
@@ -68,8 +69,11 @@ export function clearAllAndAddDigit(state, newDigit) {
 
 
 export function addOperation(state, payload) {
-    let newValue = !payload.includes('^') ? state.value + payload
-    : `(${state.value})` + payload;
+    const currentValue = state.value.at(-1) === '.' ? state.value.split('.')[0]
+    : state.value;
+
+    let newValue = !payload.includes('^') ? currentValue + payload
+    : `(${currentValue})` + payload;
 
     const newOperation = !payload.includes('^') ? payload
     : '^';
@@ -82,8 +86,8 @@ export function addOperation(state, payload) {
         currentValue: newCurrentValue, 
         operation: newOperation,
         secondValue_tmp: null, 
-        values: state.currentValue ?     
-        [...state.values,  state.currentValue]
+        values: currentValue ?     
+        [...state.values,  currentValue]
         : !state.values[0] ? [...state.values, '0']
         : [...state.values]
     };
@@ -111,10 +115,12 @@ export function changeSign(state) {
     if(state.currentValue == '') return {...state}
     const valueToChange = state.currentValue;
     const isSecondValue = state.values[0] ? true : false;
-    
-    const newValue = isSecondValue ? state.values[0] + state.operation + `(-${valueToChange})`
-    : state.operation ? `(-${valueToChange})` + state.operation
+    const changedValue = parseFloat(valueToChange) < 0 ? `${(valueToChange * (-1))}` 
     : `(-${valueToChange})`
+    
+    const newValue = isSecondValue ? state.value.split(state.operation)[0] + state.operation + changedValue
+    : state.operation ? changedValue + state.operation
+    : changedValue
 
     return {
         ...state,

@@ -6,4 +6,9 @@
     font-size: 45px;
     justify-content: flex-end;
     max-width: 420px;
+    overflow: scroll;
+    &::-webkit-scrollbar {
+        display: none;
+      }
+     
 }
