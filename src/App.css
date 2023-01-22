@@ -8,6 +8,7 @@
     display: grid;
     justify-content: center;
     padding-top: 50px;
+    color: #E7E7E7;
 }
 
 .calcContainer {
@@ -26,7 +27,6 @@
 .memoryIndicator {
     position: absolute;
     font-family: 'IBM Plex sans', sans-serif;
-    color: #E7E7E7;
     top: 20px;
     left: 20px;
     font-size: 16px;

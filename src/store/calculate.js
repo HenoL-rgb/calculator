@@ -1,4 +1,6 @@
-import { addCommand, divideCommand, factorialCommand, multiplyCommand, percentCommand, subCommand } from "./commands";
+import { addCommand, clearInput, divideCommand,
+    factorialCommand, multiplyCommand, percentCommand,
+    powCommand, saveResult, subCommand } from "./commands";
 import { initialState } from "./rootReducer";
 
 export function calculate(state) {
@@ -29,7 +31,7 @@ export function calculate(state) {
             }
             break;
         case "^":
-            firstValue = firstValue ** secondValue;
+            firstValue = powCommand(firstValue, secondValue);
             break;
         case "x!":
             try {
@@ -54,29 +56,3 @@ export function calculate(state) {
     return saveResult(state, firstValue);
 }
 
-export function clearInput(value) {
-    let newValue = removeOuterBraces(value)
-    if(newValue.includes('/')) {
-        const splitValue = newValue.split('/');
-        newValue = divideCommand(parseFloat(splitValue[0]), parseFloat(splitValue[1]))
-    }
-    return parseFloat(newValue);
-}
-
-export function removeOuterBraces(value) {
-    return value.split('').filter(item => (item != '(' && item != ')')).join('');
-}
-
-export function saveResult(state, firstValue) {
-    const afterDot = `${firstValue}`.split('.');
-    if(afterDot[1]?.length > 4) {
-        firstValue = afterDot[0] + '.' + afterDot[1].slice(0, 3); 
-    }
-
-    return {...state, 
-        value: `${firstValue}`, 
-        values: [`${firstValue}`],
-        operation: null,
-        currentValue: '',
-    };
-}

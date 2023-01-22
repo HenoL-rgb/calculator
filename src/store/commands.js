@@ -1,6 +1,8 @@
 import { calculate } from './calculate'
 import { initialState } from './rootReducer';
 
+const MAX_HISTORY = 5;
+
 export function addCommand(firstValue, secondValue) {
     return firstValue + secondValue;
 }
@@ -29,6 +31,14 @@ export function factorialCommand(value) {
     }
 
     return newValue;
+}
+
+export function powCommand(firstValue, secondValue) {
+    if(firstValue < 0 && secondValue < 1) {
+        throw new Error('neg square')
+    }
+
+    return firstValue ** secondValue;
 }
 
 export function addDigit(state, newDigit) {
@@ -73,12 +83,15 @@ export function addOperation(state, payload) {
     : state.value;
 
     const newValue = !payload.includes('^') ? currentValue + payload
+    : currentValue.includes('(',')') ? currentValue + payload
     : `(${currentValue})` + payload;
 
     const newOperation = !payload.includes('^') ? payload
     : '^';
 
     const newCurrentValue = !payload.includes('^') ? ''
+    : payload.includes(')') ? 
+    removeOuterBraces(payload.split('^')[1])
     : payload.split('^')[1]
 
     return {...state, 
@@ -87,7 +100,7 @@ export function addOperation(state, payload) {
         operation: newOperation,
         secondValue_tmp: null, 
         values: state.currentValue ?     
-        [...state.values,  currentValue]
+        [...state.values,  state.currentValue]
         : !state.values[0] ? [...state.values, '0']
         : [...state.values]
     };
@@ -101,9 +114,12 @@ export function addOperationAndCalc(state, payload) {
 }
 
 
-export function undoOperation(prevState) {
+export function undoOperation(state) {
+    if(!state.history.length) return {...state}
 
-    return {...prevState};
+    const prevState = state.history.at(-1);
+
+    return {...prevState, history: state.history.filter(item => item != prevState)};
 }
 
 
@@ -111,17 +127,22 @@ export function changeSign(state) {
     if(state.currentValue === '' || state.currentValue === '0') return {...state}
     const valueToChange = state.currentValue;
     const isSecondValue = state.values[0] ? true : false;
-    const changedValue = parseFloat(valueToChange) < 0 ? `${(valueToChange * (-1))}` 
-    : `(-${valueToChange})`
+    const changedValue =  valueToChange.includes('-') ? 
+        valueToChange.includes('/') ? `(${valueToChange.slice(1)})`
+        :`${valueToChange.slice(1)}` 
+        : `(-${valueToChange})`
+
+    const newCurrentValue = removeOuterBraces(changedValue);
     
-    const newValue = isSecondValue ? state.value.split(state.operation)[0] + state.operation + changedValue
-    : state.operation ? changedValue + state.operation
-    : changedValue
+    const newValue = isSecondValue ? state.value.split(state.operation)[0]
+        + state.operation + changedValue
+        : state.operation ? changedValue + state.operation
+        : changedValue
 
     return {
         ...state,
         value: newValue,
-        currentValue: `${multiplyCommand(parseFloat(valueToChange), -1)}`
+        currentValue: newCurrentValue
     }
 
 }
@@ -246,4 +267,41 @@ export function clearCurrent(state) {
         ...initialState,
         memory: state.memory,
     }
+}
+
+
+
+
+export function clearInput(value) {
+    let newValue = removeOuterBraces(value)
+    if(newValue.includes('/')) {
+        const splitValue = newValue.split('/');
+        newValue = divideCommand(parseFloat(splitValue[0]), parseFloat(splitValue[1]))
+    }
+    return parseFloat(newValue);
+}
+
+export function removeOuterBraces(value) {
+    return value.split('').filter(item => (item != '(' && item != ')')).join('');
+}
+
+export function saveResult(state, firstValue) {
+    const afterDot = `${firstValue}`.split('.');
+    if(afterDot[1]?.length > 4) {
+        firstValue = afterDot[0] + '.' + afterDot[1].slice(0, 3); 
+    }
+
+    let newHistory = [...state.history.map(item => ({...item, history: []})), state] 
+
+    if(newHistory.length > MAX_HISTORY) {
+        newHistory = newHistory.filter((item,index) => index != 0)
+    }
+
+    return {...state, 
+        value: `${firstValue}`, 
+        values: [`${firstValue}`],
+        operation: null,
+        currentValue: '',
+        history: [...newHistory]
+    };
 }

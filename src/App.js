@@ -7,7 +7,7 @@ import Output from './Output';
 
 function App() {
 
-  const [history, setHistory] = useState([]);
+  //const [history, setHistory] = useState([]);
 
   const dispatch = useDispatch();
 
@@ -15,44 +15,45 @@ function App() {
     return state.value;
   })
 
-  const state = useSelector(state => state)
+  //const state = useSelector(state => state)
 
   const isMemorySet = useSelector(state => {
     return state.memory;
   })
 
-  useEffect(() =>{
-    if(history.length > 5) {
-      setHistory(history.filter((item,index) => index != 0))
-    }
-  }, [history])
+  // useEffect(() =>{
+  //   if(history.length > 5) {
+  //     setHistory(history.filter((item,index) => index != 0))
+  //   }
+  // }, [history])
 
 
   function handleClick(operation, value) {
-    if(operation === 'UNDO'){
-      if(history.length === 0) return;
+    // if(operation === 'UNDO'){
+    //   if(history.length === 0) return;
       
-      const prevState = history.at(-1);
-      setHistory(history.filter(item => item != prevState))
-      dispatch({type: operation, payload: prevState})
-      return;
-    }
+    //   const prevState = history.at(-1);
+    //   setHistory(history.filter(item => item != prevState))
+    //   dispatch({type: operation, payload: prevState})
+    //   return;
+    // }
 
     dispatch({type: operation, payload: value});
     
-    if(operation === 'CLEAR_ALL'){
-      setHistory([]);
-      return;
-    }
+    // if(operation === 'CLEAR_ALL'){
+    //   setHistory([]);
+    //   return;
+    // }
 
-    if(operation === "CALC_VALUE" ||
-    (operation === "ADD_OPERATION" && state.operation !== null && state.currentState != '')){
-      setHistory(prev => [...history, state])
-    }
+    // if(operation === "CALC_VALUE" ||
+    // (operation === "ADD_OPERATION" && state.operation !== null && state.currentState != '')){
+    //   setHistory(prev => [...history, state])
+    // }
   }
 
   return (
     <div className="App">
+      <input type={'color'}/>
       <div className="calcContainer">
         {
           isMemorySet ?
