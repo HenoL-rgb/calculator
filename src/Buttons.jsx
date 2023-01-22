@@ -30,42 +30,42 @@ export const operations = {
   memRestore: "MEMORY_RESTORE",
 };
 
-export default function Buttons({handleClick}) {
+export default function Buttons({handleClick, topButtonsColor, color, sideButtonsColor, numButtonsColor}) {
 
   return (
     <div className={classes.container}>
         <div className={classes.topButtons}>
-          <Button value={'U'} operation={operations.undo} handleClick={handleClick}/>
-          <Button value={'MC'} operation={operations.memClear} handleClick={handleClick}/>
-          <Button value={'M+'} operation={operations.memPlus} handleClick={handleClick}/>
-          <Button value={'M-'} operation={operations.memMinus} handleClick={handleClick}/>
-          <Button value={'MR'} operation={operations.memRestore} handleClick={handleClick}/>
-          <Button value={'10^x'} operation={operations.tenPowX} handleClick={handleClick}/>
-          <Button value={'AC'} operation={operations.clearAll} handleClick={handleClick}/>
-          <Button value={'C'} operation={operations.clear} handleClick={handleClick}/>
-          <Button value={'%'} operation={operations.percent} handleClick={handleClick}/>
-          <Button value={'/'} operation={operations.addOperation} handleClick={handleClick}/>
+          <Button bgColor={topButtonsColor} fontColor={color} value={'U'} operation={operations.undo} handleClick={handleClick}/>
+          <Button bgColor={topButtonsColor} fontColor={color} value={'MC'} operation={operations.memClear} handleClick={handleClick}/>
+          <Button bgColor={topButtonsColor} fontColor={color} value={'M+'} operation={operations.memPlus} handleClick={handleClick}/>
+          <Button bgColor={topButtonsColor} fontColor={color} value={'M-'} operation={operations.memMinus} handleClick={handleClick}/>
+          <Button bgColor={topButtonsColor} fontColor={color} value={'MR'} operation={operations.memRestore} handleClick={handleClick}/>
+          <Button bgColor={topButtonsColor} fontColor={color} value={'10^x'} operation={operations.tenPowX} handleClick={handleClick}/>
+          <Button bgColor={topButtonsColor} fontColor={color} value={'AC'} operation={operations.clearAll} handleClick={handleClick}/>
+          <Button bgColor={topButtonsColor} fontColor={color} value={'C'} operation={operations.clear} handleClick={handleClick}/>
+          <Button bgColor={topButtonsColor} fontColor={color} value={'%'} operation={operations.percent} handleClick={handleClick}/>
+          <Button bgColor={topButtonsColor} fontColor={color} value={'/'} operation={operations.addOperation} handleClick={handleClick}/>
         </div>
         <div className={classes.sideColumn}>
-          <Select values={['x^2', 'x^3', 'x^y']} operation={operations.addOperation} handleClick={handleClick}/>
-          <Select values={['√x', '∛x', `y√x`]} operation={operations.addOperation} handleClick={handleClick}/>
+          <Select bgColor={sideButtonsColor} fontColor={color} values={['x^2', 'x^3', 'x^y']} operation={operations.addOperation} handleClick={handleClick}/>
+          <Select bgColor={sideButtonsColor} fontColor={color} values={['√x', '∛x', `y√x`]} operation={operations.addOperation} handleClick={handleClick}/>
 
-          <Button value={'x!'} operation={operations.factorial} handleClick={handleClick}/>
-          <Button value={'1/x'} operation={operations.oneDivideX} handleClick={handleClick}/>
+          <Button bgColor={sideButtonsColor} fontColor={color} value={'x!'} operation={operations.factorial} handleClick={handleClick}/>
+          <Button bgColor={sideButtonsColor} fontColor={color} value={'1/x'} operation={operations.oneDivideX} handleClick={handleClick}/>
         </div>
         <div className={classes.numbers}>
           {numbers.map(item => 
-          <Button key={item} value={`${item}`} operation={operations.addDigit} 
+          <Button bgColor={numButtonsColor} fontColor={color} key={item} value={`${item}`} operation={operations.addDigit} 
           handleClick={handleClick}/>)}
-          <Button value={'+/-'} operation={operations.changeSign} handleClick={handleClick}/>
-          <Button value={'.'} operation={operations.addDot} handleClick={handleClick}/>
+          <Button bgColor={numButtonsColor} fontColor={color} value={'+/-'} operation={operations.changeSign} handleClick={handleClick}/>
+          <Button bgColor={numButtonsColor} fontColor={color} value={'.'} operation={operations.addDot} handleClick={handleClick}/>
         </div>
 
         <div className={classes.sideColumn}>
-          <Button value={'*'} operation={operations.addOperation} handleClick={handleClick}/>
-          <Button value={'-'} operation={operations.addOperation} handleClick={handleClick}/>
-          <Button value={'+'} operation={operations.addOperation} handleClick={handleClick}/>
-          <Button value={'='} operation={operations.calculate} handleClick={handleClick}/>
+          <Button bgColor={sideButtonsColor} fontColor={color} value={'*'} operation={operations.addOperation} handleClick={handleClick}/>
+          <Button bgColor={sideButtonsColor} fontColor={color} value={'-'} operation={operations.addOperation} handleClick={handleClick}/>
+          <Button bgColor={sideButtonsColor} fontColor={color} value={'+'} operation={operations.addOperation} handleClick={handleClick}/>
+          <Button bgColor={sideButtonsColor} fontColor={color} value={'='} operation={operations.calculate} handleClick={handleClick}/>
         </div>
     </div>
   )

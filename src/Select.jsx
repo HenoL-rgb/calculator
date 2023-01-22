@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-export default function Select({values, operation, handleClick}) {
+export default function Select({values, operation, handleClick, fontColor, bgColor}) {
 
     function handleChange(value){
         const newValue = sendDegree(value);
@@ -30,7 +30,7 @@ export default function Select({values, operation, handleClick}) {
 
     return (
         <div>
-            <select value={values.at(-1)} onChange={(e) => handleChange(e.target.value)}>
+            <select style={{background: bgColor, color: fontColor}} value={values.at(-1)} onChange={(e) => handleChange(e.target.value)}>
                 <option selected hidden>{values.at(-1)}</option>
                 {values.map(item =>
                 <option key={item} value={`${item}`}>{item}</option>
