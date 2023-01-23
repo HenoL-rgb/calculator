@@ -1,4 +1,4 @@
-import {addDigit, clearAllAndAddDigit, addOperationAndCalc, addOperation, addDegree, undoOperation, changeSign, divideOneByX, factorial, tenPowX, percent, addToMemory, subFromMemory, restoreMemory, clearMemory, clearCurrent} from './commands'
+import {addDigit, clearAllAndAddDigit, addOperationAndCalc, addOperation, undoOperation, changeSign, divideOneByX, factorial, tenPowX, percent, addToMemory, subFromMemory, restoreMemory, clearMemory, clearCurrent} from './commands'
 import {calculate} from './calculate'
 
 export const initialState = {

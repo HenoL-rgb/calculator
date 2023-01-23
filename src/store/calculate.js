@@ -31,7 +31,15 @@ export function calculate(state) {
             }
             break;
         case "^":
-            firstValue = powCommand(firstValue, secondValue);
+            try {
+                firstValue = powCommand(firstValue, secondValue);
+            } catch(err) {
+                return {
+                    ...state,
+                    isError: true,
+                    value: `${err.name}: ${err.message}`
+                }
+            }
             break;
         case "x!":
             try {

@@ -34,10 +34,9 @@ export function factorialCommand(value) {
 }
 
 export function powCommand(firstValue, secondValue) {
-    if(firstValue < 0 && secondValue < 1) {
+    if(firstValue < 0 && secondValue ** 2 < 1 && secondValue ** 2 > 0) {
         throw new Error('neg square')
     }
-
     return firstValue ** secondValue;
 }
 
@@ -55,23 +54,6 @@ export function addDigit(state, newDigit) {
     return {...state, value: newValue, currentValue: newCurrentValue}
 }
 
-
-export function addDegree(state, payload) {
-    if(state.currentValue === '') return {...state};
-    const degree = payload.split('^')[1];
-
-    let newValue = `(${state.value + payload})`;
-
-    return {...state, 
-        value: newValue,
-        currentValue: payload.split('^')[1], 
-        operation: '^',
-        secondValue_tmp: null, 
-        values: !state.values[0] ? [...state.values, '0', state.currentValue]
-        : [...state.values, state.currentValue]
-    };
-}
-
 export function clearAllAndAddDigit(state, newDigit) {
     const newState = {...initialState, memory: state.memory};
     return addDigit(newState, newDigit);
@@ -84,7 +66,7 @@ export function addOperation(state, payload) {
 
     const newValue = !payload.includes('^') ? currentValue + payload
     : currentValue.includes('(',')') ? currentValue + payload
-    : `(${currentValue})` + payload;
+    : `${currentValue}` + payload;
 
     const newOperation = !payload.includes('^') ? payload
     : '^';
@@ -125,7 +107,7 @@ export function undoOperation(state) {
 
 export function changeSign(state) {
     if(state.currentValue === '' || state.currentValue === '0') return {...state}
-    const valueToChange = state.currentValue;
+    const valueToChange = removeOuterBraces(state.currentValue);
     const isSecondValue = state.values[0] ? true : false;
     const changedValue =  valueToChange.includes('-') ? 
         valueToChange.includes('/') ? `(${valueToChange.slice(1)})`
@@ -134,7 +116,6 @@ export function changeSign(state) {
         : `-${valueToChange}`
 
     const newCurrentValue = removeOuterBraces(changedValue);
-    console.log(state.value.split(state.operation))
     const newValue = isSecondValue ? state.value.slice(0, state.values[0].length) + state.operation + changedValue
         : state.operation ? changedValue + state.operation
         : changedValue
@@ -154,7 +135,13 @@ export function divideOneByX(state) {
         values: [...state.values, state.currentValue]
     });
 
-    return calculate({...newState, values: ['1', ...newState.values], operation: '/'})
+    const calculatedState = calculate({
+        ...newState, 
+        values: ['1', ...newState.values], 
+        operation: '/',
+    })
+
+    return {...calculatedState, history: calculatedState.history.filter(item => item != calculatedState.history.at(-1))}
 
 }
 
@@ -166,7 +153,13 @@ export function factorial(state, payload) {
         values: [...state.values, state.currentValue]
     });
 
-    return calculate({...newState, operation: payload})
+    console.log(newState)
+    const calculatedState = calculate({
+        ...newState, 
+        operation: payload, 
+    })
+
+    return {...calculatedState, history: calculatedState.history.filter(item => item.operation != 'x!')}
 }
 
 
@@ -177,7 +170,12 @@ export function tenPowX(state, payload) {
         values: [...state.values, state.currentValue]
     });
 
-    return calculate({...newState, operation: payload})
+    const calculatedState = calculate({
+        ...newState, 
+        operation: payload, 
+    })
+
+    return {...calculatedState, history: calculatedState.history.filter(item => item.operation != '10^x')}
 }
 
 export function percent(state, payload) {
