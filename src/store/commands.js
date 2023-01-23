@@ -244,6 +244,8 @@ export function subFromMemory(state) {
 
 export function restoreMemory(state) {
 
+    if(!state.memory) return {...state}
+    
     return {
         ...state,
         value: `${state.memory}`,

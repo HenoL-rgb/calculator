@@ -1,4 +1,5 @@
 .container {
+  box-sizing: border-box;
     display: flex;
     align-items: center;
     height: 100%;
@@ -6,9 +7,14 @@
     padding: 10px 0;
     justify-content: flex-end;
     max-width: 420px;
-    overflow: scroll;
-    &::-webkit-scrollbar {
-        display: none;
+    overflow: hidden;
+    & span {
+      overflow-x: scroll;
+      text-align: end;
+      width: 100%;
+      &::-webkit-scrollbar { 
+        display: none;  /* Safari and Chrome */
       }
-     
+    }
+
 }

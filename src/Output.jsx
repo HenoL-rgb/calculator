@@ -5,7 +5,7 @@ export default function Output({value, color}) {
   
   return (
     <div className={classes.container}>
-        {value}
+        <span>{value}</span>
     </div>
   )
 }
