@@ -47,9 +47,9 @@ export function addDigit(state, newDigit) {
     : state.currentValue + newDigit;
 
     const newValue = !state.values[0] ? newCurrentValue
-    : !state.value.includes('(') ? state.values[0] + state.operation +  newCurrentValue
-    : !state.value.includes(')') ? state.values[0] + state.operation +  newCurrentValue + ')'
-    : state.value.split(state.operation)[0] + state.operation + newCurrentValue;
+    : !state.currentValue.includes('(') ? state.values[0] + state.operation +  newCurrentValue
+    : !state.currentValue.includes(')') ? state.values[0] + state.operation +  newCurrentValue + ')'
+    : state.value.slice(0, state.values[0].length) + state.operation + newCurrentValue;
   
 
     return {...state, value: newValue, currentValue: newCurrentValue}
@@ -130,11 +130,12 @@ export function changeSign(state) {
     const changedValue =  valueToChange.includes('-') ? 
         valueToChange.includes('/') ? `(${valueToChange.slice(1)})`
         :`${valueToChange.slice(1)}` 
-        : `(-${valueToChange})`
+        : isSecondValue ? `(-${valueToChange})`
+        : `-${valueToChange}`
 
     const newCurrentValue = removeOuterBraces(changedValue);
     console.log(state.value.split(state.operation))
-    const newValue = isSecondValue ? state.value.split(state.operation)[0] + state.operation + changedValue
+    const newValue = isSecondValue ? state.value.slice(0, state.values[0].length) + state.operation + changedValue
         : state.operation ? changedValue + state.operation
         : changedValue
 
