@@ -133,9 +133,8 @@ export function changeSign(state) {
         : `(-${valueToChange})`
 
     const newCurrentValue = removeOuterBraces(changedValue);
-    
-    const newValue = isSecondValue ? state.value.split(state.operation)[0]
-        + state.operation + changedValue
+    console.log(state.value.split(state.operation))
+    const newValue = isSecondValue ? state.value.split(state.operation)[0] + state.operation + changedValue
         : state.operation ? changedValue + state.operation
         : changedValue
 
