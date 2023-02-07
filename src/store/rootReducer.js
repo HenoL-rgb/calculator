@@ -49,7 +49,10 @@ const rootReducer = (state = initialState, action) => {
           return addOperationAndCalc(currentState, action.payload);
         }
         return addOperation(
-          { ...currentState, value: currentState.value.slice(0, currentState.value.length - 1) },
+          {
+            ...currentState,
+            value: currentState.value.slice(0, currentState.value.length - 1)
+          },
           action.payload
         );
       }
